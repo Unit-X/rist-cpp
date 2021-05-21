@@ -72,6 +72,7 @@ RISTNetReceiver::RISTNetReceiver() {
                                            std::placeholders::_2);
     networkDataCallback = std::bind(&RISTNetReceiver::dataFromClientStub, this, std::placeholders::_1,
                                     std::placeholders::_2, std::placeholders::_3);
+	clientDisconnectedCallback = std::bind(&RISTNetReceiver::clientDisconnectStub, this, std::placeholders::_1, std::placeholders::_2);
     LOGGER(false, LOGG_NOTIFY, "RISTNetReceiver constructed")
 }
 
@@ -103,6 +104,11 @@ int RISTNetReceiver::dataFromClientStub(const uint8_t *pBuf, size_t lSize,
     LOGGER(true, LOGG_ERROR, "networkDataCallback not implemented. Data is lost")
     return -1;
 }
+
+void RISTNetReceiver::clientDisconnectStub(std::shared_ptr<NetworkConnection> &rConnection, const rist_peer& peer) {
+    LOGGER(true, LOGG_ERROR, "clientDisconnectedCallback not implemented.")
+}
+
 
 int RISTNetReceiver::receiveData(void *pArg, const rist_data_block *pDataBlock) {
     RISTNetReceiver *lWeakSelf = (RISTNetReceiver *) pArg;
@@ -153,12 +159,18 @@ int RISTNetReceiver::clientDisconnect(void *pArg, rist_peer *pPeer) {
         return 0;
     }
 
-    if (lWeakSelf->mClientList.find(pPeer) == lWeakSelf->mClientList.end()) {
+	auto netObj = lWeakSelf->mClientList.find(pPeer);
+	if (netObj == lWeakSelf->mClientList.end()) {
         LOGGER(true, LOGG_ERROR, "RISTNetReceiver::clientDisconnect unknown peer")
         return 0;
-    } else {
-        lWeakSelf->mClientList.erase(lWeakSelf->mClientList.find(pPeer)->first);
+	}
+
+    if (lWeakSelf->clientDisconnectedCallback) {
+        lWeakSelf->clientDisconnectedCallback(netObj->second, *pPeer);
+		lWeakSelf->clientDisconnectedCallback = nullptr;
     }
+
+	lWeakSelf->mClientList.erase(netObj->first);
     return 0;
 }
 
@@ -367,6 +379,7 @@ void RISTNetReceiver::getVersion(uint32_t &rCppWrapper, uint32_t &rRistMajor, ui
 RISTNetSender::RISTNetSender() {
     validateConnectionCallback = std::bind(&RISTNetSender::validateConnectionStub, this, std::placeholders::_1,
                                            std::placeholders::_2);
+	clientDisconnectedCallback = std::bind(&RISTNetSender::clientDisconnectStub, this, std::placeholders::_1, std::placeholders::_2);
     LOGGER(false, LOGG_NOTIFY, "RISTNetSender constructed")
 }
 
@@ -390,6 +403,10 @@ std::shared_ptr<RISTNetSender::NetworkConnection> RISTNetSender::validateConnect
            "validateConnectionCallback not implemented. Will not accept connection from: " << ipAddress << ":"
                                                                                            << unsigned(port))
     return 0;
+}
+
+void RISTNetSender::clientDisconnectStub(std::shared_ptr<NetworkConnection> &rConnection, const rist_peer& peer) {
+    LOGGER(true, LOGG_ERROR, "clientDisconnectedCallback not implemented.")
 }
 
 int RISTNetSender::receiveOOBData(void *pArg, const rist_oob_block *pOOBBlock) {
@@ -424,12 +441,18 @@ int RISTNetSender::clientDisconnect(void *pArg, rist_peer *pPeer) {
         return 0;
     }
 
-    if (lWeakSelf->mClientList.find(pPeer) == lWeakSelf->mClientList.end()) {
+	auto netObj = lWeakSelf->mClientList.find(pPeer);
+	if (netObj != lWeakSelf->mClientList.end()) {
         LOGGER(true, LOGG_ERROR, "RISTNetSender::clientDisconnect unknown peer")
         return 0;
-    } else {
-        lWeakSelf->mClientList.erase(lWeakSelf->mClientList.find(pPeer)->first);
+	}
+
+    if (lWeakSelf->clientDisconnectedCallback) {
+		lWeakSelf->clientDisconnectedCallback(netObj->second, *pPeer);
+		lWeakSelf->clientDisconnectedCallback = nullptr;
     }
+
+	lWeakSelf->mClientList.erase(netObj->first);
     return 0;
 }
 

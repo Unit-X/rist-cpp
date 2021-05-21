@@ -239,6 +239,9 @@ public:
   std::function<std::shared_ptr<NetworkConnection>(std::string lIPAddress, uint16_t lPort)>
       validateConnectionCallback = nullptr;
 
+  /// Callback handling disconnecting clients
+  std::function<void(std::shared_ptr<NetworkConnection>&, const rist_peer&)> clientDisconnectedCallback = nullptr;
+
   // Delete copy and move constructors and assign operators
   RISTNetReceiver(RISTNetReceiver const &) = delete;             // Copy construct
   RISTNetReceiver(RISTNetReceiver &&) = delete;                  // Move construct
@@ -249,6 +252,7 @@ private:
 
   std::shared_ptr<NetworkConnection> validateConnectionStub(std::string lIPAddress, uint16_t lPort);
   int dataFromClientStub(const uint8_t *pBuf, size_t lSize, std::shared_ptr<NetworkConnection> &rConnection);
+  void clientDisconnectStub(std::shared_ptr<NetworkConnection> &Connection, const rist_peer& peer);
 
   // Private method receiving the data from librist C-API
   static int receiveData(void *pArg, const rist_data_block *data_block);
@@ -454,6 +458,9 @@ public:
   std::function<std::shared_ptr<NetworkConnection>(std::string lIPAddress, uint16_t lPort)>
       validateConnectionCallback = nullptr;
 
+  /// Callback handling disconnecting clients
+	std::function<void(std::shared_ptr<NetworkConnection>&, const rist_peer&)> clientDisconnectedCallback = nullptr;
+
   // Delete copy and move constructors and assign operators
   RISTNetSender(RISTNetSender const &) = delete;             // Copy construct
   RISTNetSender(RISTNetSender &&) = delete;                  // Move construct
@@ -464,6 +471,7 @@ private:
 
   std::shared_ptr<NetworkConnection> validateConnectionStub(const std::string &ipAddress, uint16_t port);
   void dataFromClientStub(const uint8_t *pBuf, size_t lSize, std::shared_ptr<NetworkConnection> &rConnection);
+  void clientDisconnectStub(std::shared_ptr<NetworkConnection> &Connection, const rist_peer& peer);
 
   // Private method receiving OOB data from librist C-API
   static int receiveOOBData(void *pArg, const rist_oob_block *pOOBBlock);

@@ -68,7 +68,7 @@ dataFromSender(const uint8_t *buf, size_t len, std::shared_ptr<RISTNetReceiver::
         std::cout << "Did not receive the correct data" << std::endl;
         packetCounter++;
     } else {
-        std::cout << "Got " << unsigned(len) << " expexted data from connection id: " << unsigned(connectionID)
+        std::cout << "Got " << unsigned(len) << " expected data from connection id: " << unsigned(connectionID)
                   << std::endl;
     }
 
@@ -78,6 +78,21 @@ dataFromSender(const uint8_t *buf, size_t len, std::shared_ptr<RISTNetReceiver::
 void oobDataFromReceiver(const uint8_t *buf, size_t len, std::shared_ptr<RISTNetSender::NetworkConnection> &connection,
                          rist_peer *pPeer) {
     std::cout << "Got " << unsigned(len) << " bytes of oob data from the receiver" << std::endl;
+}
+
+void clientDisconnect(std::shared_ptr<RISTNetReceiver::NetworkConnection> &connection, const rist_peer& peer) {
+	std::cout << "Client disconnected from receiver";
+	if (connection) {
+		auto v = std::any_cast<std::shared_ptr<MyClass> &>(connection->mObject);
+		if (v) {
+			std::cout << ", some variable is containing the value: " << v->someVariable << std::endl;
+		} else {
+			std::cout << ", ERROR: no object found!" << std::endl;
+			std::flush(std::cout);
+		}
+	} else {
+		std::cout << ", ERROR: no connection object." << std::endl;
+	}
 }
 
 int main() {
@@ -98,6 +113,9 @@ int main() {
     myRISTNetReceiver.networkDataCallback =
             std::bind(&dataFromSender, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3,
                       std::placeholders::_4, std::placeholders::_5);
+	// disconnecting client
+    myRISTNetReceiver.clientDisconnectedCallback =
+		std::bind(&clientDisconnect, std::placeholders::_1, std::placeholders::_2);
 
     //---------------------
     //
