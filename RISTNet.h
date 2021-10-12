@@ -277,6 +277,8 @@ private:
   // The list of connected clients
   std::map<rist_peer *, std::shared_ptr<NetworkConnection>> mClientList;
 
+  std::unique_ptr<rist_logging_settings, decltype(&free)> mLoggingScope{nullptr, &free};
+
 };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -491,6 +493,8 @@ private:
 
   // The list of connected clients
   std::map<rist_peer *, std::shared_ptr<NetworkConnection>> mClientList;
+
+  std::unique_ptr<rist_logging_settings, decltype(&free)> mLoggingScope{nullptr, &free};
 
 };
 
