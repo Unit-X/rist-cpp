@@ -9,7 +9,7 @@ const std::string kValidPsk = "Th1$_is_4n_0pt10N4L_P$k";
 const std::string kInvalidPsk = "Th1$_is_4_F4k3_P$k";
 
 const std::chrono::seconds kConnectTimeout = std::chrono::seconds(2);
-const std::chrono::seconds kDisconnectTimeout = std::chrono::seconds(10);
+const std::chrono::seconds kDisconnectTimeout = std::chrono::seconds(20);
 const std::chrono::seconds kReceiveTimeout = std::chrono::seconds(2);
 
 class TestFixtureReceiver : public ::testing::Test {
