@@ -44,7 +44,7 @@ A static RIST C++ wrapper library
 
 The rist-cpp > RISTNet class is divided into Receiver/Sender. The Receiver/Sender creation and configuration is detailed below.
 
-**Reciever:**
+**Receiver:**
 
 ```cpp
  
