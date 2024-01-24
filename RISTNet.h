@@ -98,8 +98,8 @@ public:
           mPeerConfig.recovery_mode = RIST_DEFAULT_RECOVERY_MODE;
           mPeerConfig.recovery_maxbitrate = RIST_DEFAULT_RECOVERY_MAXBITRATE;
           mPeerConfig.recovery_maxbitrate_return = RIST_DEFAULT_RECOVERY_MAXBITRATE_RETURN;
-          mPeerConfig.recovery_length_min = RIST_DEFAULT_RECOVERY_LENGHT_MIN;
-          mPeerConfig.recovery_length_max = RIST_DEFAULT_RECOVERY_LENGHT_MAX;
+          mPeerConfig.recovery_length_min = RIST_DEFAULT_RECOVERY_LENGTH_MIN;
+          mPeerConfig.recovery_length_max = RIST_DEFAULT_RECOVERY_LENGTH_MAX;
           mPeerConfig.recovery_reorder_buffer = RIST_DEFAULT_RECOVERY_REORDER_BUFFER;
           mPeerConfig.recovery_rtt_min = RIST_DEFAULT_RECOVERY_RTT_MIN;
           mPeerConfig.recovery_rtt_max = RIST_DEFAULT_RECOVERY_RTT_MAX;
@@ -324,8 +324,8 @@ public:
           mPeerConfig.recovery_mode = RIST_DEFAULT_RECOVERY_MODE;
           mPeerConfig.recovery_maxbitrate = RIST_DEFAULT_RECOVERY_MAXBITRATE;
           mPeerConfig.recovery_maxbitrate_return = RIST_DEFAULT_RECOVERY_MAXBITRATE_RETURN;
-          mPeerConfig.recovery_length_min = RIST_DEFAULT_RECOVERY_LENGHT_MIN;
-          mPeerConfig.recovery_length_max = RIST_DEFAULT_RECOVERY_LENGHT_MAX;
+          mPeerConfig.recovery_length_min = RIST_DEFAULT_RECOVERY_LENGTH_MIN;
+          mPeerConfig.recovery_length_max = RIST_DEFAULT_RECOVERY_LENGTH_MAX;
           mPeerConfig.recovery_reorder_buffer = RIST_DEFAULT_RECOVERY_REORDER_BUFFER;
           mPeerConfig.recovery_rtt_min = RIST_DEFAULT_RECOVERY_RTT_MIN;
           mPeerConfig.recovery_rtt_max = RIST_DEFAULT_RECOVERY_RTT_MAX;
